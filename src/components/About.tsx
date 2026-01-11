@@ -27,7 +27,7 @@ export default function About() {
                     viewport={{ once: true, margin: "-100px" }}
                     transition={{ duration: 0.8 }}
                 >
-                    <Frame className={styles.masterFrame}>
+                    <Frame className={styles.masterFrame} hideBottom>
                         <img
                             src={config.masterPhoto}
                             alt="Master"
@@ -50,7 +50,7 @@ export default function About() {
                     viewport={{ once: true, margin: "-100px" }}
                     transition={{ duration: 0.8 }}
                 >
-                    <Frame className={styles.galleryFrame}>
+                    <Frame className={styles.galleryFrame} hideBottom>
                         <StudioGallery images={studioData} />
                     </Frame>
                 </motion.div>

@@ -22,10 +22,11 @@ export default function StudioGallery({ images }: StudioGalleryProps) {
     // Auto-play
     useEffect(() => {
         const timer = setInterval(() => {
-            nextSlide();
+            setCurrentIndex((prev) => (prev + 1) % images.length);
+            setDirection(1);
         }, 5000);
         return () => clearInterval(timer);
-    }, [currentIndex]);
+    }, [images.length]);
 
     const paginate = (newDirection: number) => {
         setDirection(newDirection);

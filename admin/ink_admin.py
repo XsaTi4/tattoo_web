@@ -8,8 +8,10 @@ from tkinter import filedialog, messagebox
 
 # Settings
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-GALLERY_JSON = os.path.join(PROJECT_ROOT, 'src', 'data', 'gallery.json')
-CONFIG_JSON = os.path.join(PROJECT_ROOT, 'src', 'data', 'config.json')
+SRC_DIR = os.path.join(PROJECT_ROOT, 'src')
+SRC_DATA_DIR = os.path.join(SRC_DIR, 'data')
+GALLERY_JSON = os.path.join(SRC_DATA_DIR, 'gallery.json')
+CONFIG_JSON = os.path.join(SRC_DATA_DIR, 'config.json')
 IMAGES_DIR = os.path.join(PROJECT_ROOT, 'public', 'images')
 
 class InkAdminApp(ctk.CTk):
@@ -43,10 +45,15 @@ class InkAdminApp(ctk.CTk):
         
         ctk.CTkLabel(self.sidebar, text="INK DYNASTY", font=("Arial", 20, "bold")).pack(pady=20)
         
-        ctk.CTkButton(self.sidebar, text="Update Site (Git Push)", command=self.git_sync, fg_color="green").pack(pady=10, padx=10)
-        
-        self.status_label = ctk.CTkLabel(self.sidebar, text="Checking status...", font=("Arial", 12))
+        self.status_label = ctk.CTkLabel(self.sidebar, text="Status: Ready", text_color="gray")
         self.status_label.pack(side="bottom", pady=20)
+        
+        # Git Sync Controls
+        sync_frame = ctk.CTkFrame(self.sidebar, fg_color="transparent")
+        sync_frame.pack(side="bottom", fill="x", padx=10, pady=10)
+        
+        ctk.CTkButton(sync_frame, text="Fetch Updates (Pull)", fg_color="#F39C12", hover_color="#D68910", command=self.fetch_updates).pack(fill="x", pady=5)
+        ctk.CTkButton(sync_frame, text="Update Site (Git Push)", fg_color="#27AE60", hover_color="#2ECC71", command=self.git_sync).pack(fill="x", pady=5)
 
         # Tabs
         self.tabview = ctk.CTkTabview(self)
@@ -374,6 +381,22 @@ class InkAdminApp(ctk.CTk):
                 
             except Exception as e:
                 self.log(f"Error changing master photo: {e}")
+
+    def fetch_updates(self):
+        self.log("Fetching updates from remote...")
+        try:
+            self.repo.git.pull()
+            self.log("Successfully pulled latest changes.")
+            
+            # Refresh all data
+            self.refresh_photo_list()
+            self.refresh_studio_list()
+            self.refresh_master_preview()
+            self.update_status()
+            messagebox.showinfo("Success", "Repository Updated!")
+        except Exception as e:
+            self.log(f"Fetch Error: {str(e)}")
+            messagebox.showerror("Error", f"Failed to fetch updates: {str(e)}")
 
     def git_sync(self):
         self.log("Git Sync Started...")

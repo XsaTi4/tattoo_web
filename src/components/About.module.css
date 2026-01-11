@@ -50,16 +50,20 @@
 
 .galleryFrame {
     width: 100%;
-    max-width: 500px;
-    height: 350px;
+    max-width: 800px;
+    /* Increased from 500px */
+    height: 550px;
+    /* Increased from 350px */
     /* Fixed height for slideshow */
     position: relative;
 }
 
 .masterFrame {
     width: 100%;
-    max-width: 400px;
-    height: 400px;
+    max-width: 500px;
+    /* Increased from 400px */
+    height: 500px;
+    /* Increased from 400px */
     /* Square-ish for portrait */
     position: relative;
     overflow: hidden;
