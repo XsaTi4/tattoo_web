@@ -60,10 +60,39 @@ class InkAdminApp(ctk.CTk):
         self.geometry("900x700")
         ctk.set_appearance_mode("Dark")
         
-        self.repo = git.Repo(PROJECT_ROOT)
+        self.repo = None
+        self.ensure_repo()
+        
         self.load_data()
         self.setup_ui()
         self.update_status()
+
+    def ensure_repo(self):
+        # If .git exists, we are good
+        if os.path.exists(os.path.join(PROJECT_ROOT, '.git')):
+            try:
+                self.repo = git.Repo(PROJECT_ROOT)
+                self.log(f"Repository loaded: {PROJECT_ROOT}")
+            except Exception as e:
+                self.log(f"Error loading repo: {e}")
+            return
+
+        # If IS_PORTABLE is True and empty, prompt for clone
+        if IS_PORTABLE:
+            answer = messagebox.askyesno("Setup", "Content not found locally.\n\nDownload (Clone) from GitHub to portable storage?")
+            if answer:
+                try:
+                    os.makedirs(REPO_DIR, exist_ok=True)
+                    self.log(f"Cloning to {REPO_DIR}...")
+                    git.Repo.clone_from(REMOTE_URL, REPO_DIR)
+                    self.repo = git.Repo(PROJECT_ROOT)
+                    messagebox.showinfo("Success", "Repository downloaded successfully!\nApp is ready.")
+                    self.log("Clone successful.")
+                except Exception as e:
+                    messagebox.showerror("Clone Error", f"Failed to download: {e}")
+                    self.log(f"Clone failed: {e}")
+            else:
+                messagebox.showwarning("Warning", "App will run in limited mode without content.")
 
     def load_data(self):
         with open(GALLERY_JSON, 'r') as f:
