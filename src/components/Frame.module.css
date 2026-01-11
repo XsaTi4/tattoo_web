@@ -1,0 +1,69 @@
+.frame {
+    position: relative;
+    padding: 20px;
+    border: 1px solid rgba(192, 192, 192, 0.3);
+    /* Low opacity silver */
+    display: inline-block;
+}
+
+.content {
+    position: relative;
+    z-index: 1;
+}
+
+/* Corners */
+.cornerTopLeft,
+.cornerTopRight,
+.cornerBottomLeft,
+.cornerBottomRight {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-color: var(--accent);
+    border-style: solid;
+    transition: all 0.3s ease;
+}
+
+.cornerTopLeft {
+    top: -1px;
+    left: -1px;
+    border-width: 2px 0 0 2px;
+}
+
+.cornerTopRight {
+    top: -1px;
+    right: -1px;
+    border-width: 2px 2px 0 0;
+}
+
+.cornerBottomLeft {
+    bottom: -1px;
+    left: -1px;
+    border-width: 0 0 2px 2px;
+}
+
+.cornerBottomRight {
+    bottom: -1px;
+    right: -1px;
+    border-width: 0 2px 2px 0;
+}
+
+.frame:hover .cornerTopLeft {
+    top: -5px;
+    left: -5px;
+}
+
+.frame:hover .cornerTopRight {
+    top: -5px;
+    right: -5px;
+}
+
+.frame:hover .cornerBottomLeft {
+    bottom: -5px;
+    left: -5px;
+}
+
+.frame:hover .cornerBottomRight {
+    bottom: -5px;
+    right: -5px;
+}

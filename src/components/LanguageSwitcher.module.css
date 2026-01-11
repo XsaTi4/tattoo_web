@@ -1,0 +1,32 @@
+.switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    color: var(--accent);
+}
+
+.btn {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 0.2rem;
+    transition: color 0.3s;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.btn:hover {
+    color: var(--foreground);
+}
+
+.active {
+    color: var(--foreground);
+    text-decoration: underline;
+}
+
+.divider {
+    opacity: 0.5;
+}
