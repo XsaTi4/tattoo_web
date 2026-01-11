@@ -84,7 +84,7 @@ class InkAdminApp(ctk.CTk):
                 self.log(f"Repository loaded: {PROJECT_ROOT}")
                 # Auto-pull for portable mode if this is indeed the portable repo
                 if IS_PORTABLE:
-                     self.fetch_updates()
+                     self.fetch_updates(silent=True)
             except Exception as e:
                 self.log(f"Error loading repo: {e}")
             return
@@ -107,7 +107,7 @@ class InkAdminApp(ctk.CTk):
                         IMAGES_DIR = os.path.join(PROJECT_ROOT, 'public', 'images')
                         
                          # Auto-pull to ensure freshness
-                        self.fetch_updates()
+                        self.fetch_updates(silent=True)
                         return
                     except:
                         pass # Valid folder but invalid repo, fall through to prompt
@@ -117,8 +117,11 @@ class InkAdminApp(ctk.CTk):
                 def on_rm_error(func, path, exc_info):
                     # Error handler for shutil.rmtree
                     import stat
-                    os.chmod(path, stat.S_IWRITE)
-                    os.unlink(path)
+                    try:
+                        os.chmod(path, stat.S_IWRITE)
+                        os.unlink(path)
+                    except:
+                        pass
 
                 try:
                     # Clean up if exists but broken
@@ -132,7 +135,9 @@ class InkAdminApp(ctk.CTk):
 
                     # DO NOT CREATE DIR manually for git.Repo.clone_from if using that
                     # But if we rely on it, we must ensure parent exists
-                    os.makedirs(os.path.dirname(REPO_DIR), exist_ok=True)
+                    parent_dir = os.path.dirname(REPO_DIR)
+                    if parent_dir and not os.path.exists(parent_dir):
+                        os.makedirs(parent_dir, exist_ok=True)
                     
                     self.log(f"Cloning to {REPO_DIR}...")
                     git.Repo.clone_from(REMOTE_URL, REPO_DIR)
@@ -150,6 +155,9 @@ class InkAdminApp(ctk.CTk):
                     IMAGES_DIR = os.path.join(PROJECT_ROOT, 'public', 'images')
 
                     self.repo = git.Repo(PROJECT_ROOT)
+                    # For fresh clone, we don't need to fetch again immediately, but we can to be safe
+                    # self.fetch_updates(silent=True) 
+                    
                     messagebox.showinfo("Success", "Repository downloaded successfully!\nApp is ready.")
                     self.log("Clone successful.")
                 except Exception as e:
@@ -157,6 +165,26 @@ class InkAdminApp(ctk.CTk):
                     self.log(f"Clone failed: {e}")
             else:
                 messagebox.showwarning("Warning", "App will run in limited mode without content.")
+
+    def fetch_updates(self, silent=False):
+        if not self.repo: return
+        self.log("Fetching updates from remote...")
+        try:
+            self.repo.git.pull()
+            self.log("Successfully pulled latest changes.")
+            
+            # Refresh all data ONLY if UI is initialized
+            if hasattr(self, 'photo_frame'): self.refresh_photo_list()
+            if hasattr(self, 'studio_list_frame'): self.refresh_studio_list()
+            if hasattr(self, 'master_img_label'): self.refresh_master_preview()
+            if hasattr(self, 'status_label'): self.update_status()
+            
+            if not silent:
+                messagebox.showinfo("Success", "Repository Updated!")
+        except Exception as e:
+            self.log(f"Fetch Error: {str(e)}")
+            if not silent:
+                messagebox.showerror("Error", f"Failed to fetch updates: {str(e)}")
 
     def load_data(self):
         # Gallery Data
