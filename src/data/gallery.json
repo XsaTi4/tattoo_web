@@ -30,13 +30,13 @@
     "title": "Dark Abstract"
   },
   {
-    "id": 6,
-    "src": "/images/tattoo-105.jpg",
-    "title": "Conceptual Realism"
-  },
-  {
     "id": 7,
     "src": "/images/tattoo-106.jpg",
     "title": "Emotional Portraiture"
+  },
+  {
+    "id": 6,
+    "src": "/images/tattoo-105.jpg",
+    "title": "Conceptual Realism"
   }
 ]
