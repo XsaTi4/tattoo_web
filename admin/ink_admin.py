@@ -75,7 +75,7 @@ class InkAdminApp(ctk.CTk):
         self.update_status()
 
     def ensure_repo(self):
-        # If .git exists, we are good
+        # 1. Check if .git exists in PROJECT_ROOT (Local Dev or already setup)
         if os.path.exists(os.path.join(PROJECT_ROOT, '.git')):
             try:
                 self.repo = git.Repo(PROJECT_ROOT)
@@ -84,14 +84,51 @@ class InkAdminApp(ctk.CTk):
                 self.log(f"Error loading repo: {e}")
             return
 
-        # If IS_PORTABLE is True and empty, prompt for clone
+        # 2. Portal Mode Setup
         if IS_PORTABLE:
+            # Check if REPO_DIR exists but is empty or broken
+            if os.path.exists(REPO_DIR):
+                if os.path.exists(os.path.join(REPO_DIR, '.git')):
+                    # It looks like a valid repo, try to use it
+                    try:
+                        self.repo = git.Repo(REPO_DIR)
+                        self.log(f"Repository loaded from portable storage: {REPO_DIR}")
+                        # Update global PROJECT_ROOT to point here if not already
+                        global PROJECT_ROOT, SRC_DIR, SRC_DATA_DIR, GALLERY_JSON, CONFIG_JSON, IMAGES_DIR
+                        PROJECT_ROOT = REPO_DIR
+                        SRC_DIR = os.path.join(PROJECT_ROOT, 'src')
+                        SRC_DATA_DIR = os.path.join(SRC_DIR, 'data')
+                        GALLERY_JSON = os.path.join(SRC_DATA_DIR, 'gallery.json')
+                        CONFIG_JSON = os.path.join(SRC_DATA_DIR, 'config.json')
+                        IMAGES_DIR = os.path.join(PROJECT_ROOT, 'public', 'images')
+                        return
+                    except:
+                        pass # Valid folder but invalid repo, fall through to prompt
+                
             answer = messagebox.askyesno("Setup", "Content not found locally.\n\nDownload (Clone) from GitHub to portable storage?")
             if answer:
                 try:
+                    # Clean up if exists but broken
+                    if os.path.exists(REPO_DIR):
+                        try:
+                            shutil.rmtree(REPO_DIR)
+                        except Exception as ex:
+                            messagebox.showerror("Error", f"Could not clear folder {REPO_DIR}.\nPlease delete it manually.")
+                            return
+
                     os.makedirs(REPO_DIR, exist_ok=True)
                     self.log(f"Cloning to {REPO_DIR}...")
                     git.Repo.clone_from(REMOTE_URL, REPO_DIR)
+                    
+                    # Update paths after clone
+                    global PROJECT_ROOT, SRC_DIR, SRC_DATA_DIR, GALLERY_JSON, CONFIG_JSON, IMAGES_DIR
+                    PROJECT_ROOT = REPO_DIR
+                    SRC_DIR = os.path.join(PROJECT_ROOT, 'src')
+                    SRC_DATA_DIR = os.path.join(SRC_DIR, 'data')
+                    GALLERY_JSON = os.path.join(SRC_DATA_DIR, 'gallery.json')
+                    CONFIG_JSON = os.path.join(SRC_DATA_DIR, 'config.json')
+                    IMAGES_DIR = os.path.join(PROJECT_ROOT, 'public', 'images')
+
                     self.repo = git.Repo(PROJECT_ROOT)
                     messagebox.showinfo("Success", "Repository downloaded successfully!\nApp is ready.")
                     self.log("Clone successful.")
