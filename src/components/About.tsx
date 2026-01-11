@@ -4,6 +4,9 @@ import { useLanguage } from '@/context/LanguageContext';
 import styles from './About.module.css';
 import Frame from './Frame';
 import { motion } from 'framer-motion';
+import StudioGallery from './StudioGallery';
+import studioData from '@/data/studio.json';
+import config from '@/data/config.json';
 
 export default function About() {
     const { t } = useLanguage();
@@ -24,9 +27,13 @@ export default function About() {
                     viewport={{ once: true, margin: "-100px" }}
                     transition={{ duration: 0.8 }}
                 >
-                    <Frame>
-                        {/* Placeholder for artist photo */}
-                        <div className={styles.placeholderImg}>PHOTO</div>
+                    <Frame className={styles.masterFrame}>
+                        <img
+                            src={config.masterPhoto}
+                            alt="Master"
+                            className={styles.realImg}
+                            onError={(e) => e.currentTarget.src = '/images/placeholder.jpg'}
+                        />
                     </Frame>
                 </motion.div>
             </div>
@@ -43,9 +50,8 @@ export default function About() {
                     viewport={{ once: true, margin: "-100px" }}
                     transition={{ duration: 0.8 }}
                 >
-                    <Frame>
-                        {/* Placeholder for studio photo */}
-                        <div className={styles.placeholderImg}>STUDIO</div>
+                    <Frame className={styles.galleryFrame}>
+                        <StudioGallery images={studioData} />
                     </Frame>
                 </motion.div>
             </div>

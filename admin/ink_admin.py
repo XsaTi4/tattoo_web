@@ -53,10 +53,14 @@ class InkAdminApp(ctk.CTk):
         self.tabview.pack(side="right", fill="both", expand=True, padx=10, pady=10)
         
         self.tab_photos = self.tabview.add("Photos")
+        self.tab_studio = self.tabview.add("Studio")
+        self.tab_master = self.tabview.add("Master")
         self.tab_settings = self.tabview.add("Settings")
         self.tab_console = self.tabview.add("Console")
         
         self.setup_photos_tab()
+        self.setup_studio_tab()
+        self.setup_master_tab()
         self.setup_settings_tab()
         self.setup_console_tab()
 
@@ -75,8 +79,8 @@ class InkAdminApp(ctk.CTk):
         try:
             head = self.repo.head.commit
             import time
-            time_str = time.strftime('%Y-%m-%d %H:%M', time.gmtime(head.committed_date))
-            self.status_label.configure(text=f"Last Commit:\n{time_str}\n\nBranch: {self.repo.active_branch.name}")
+            time_str = time.strftime('%Y-%m-%d %H:%M', time.localtime(head.committed_date))
+            self.status_label.configure(text=f"Last Commit ({time.tzname[0]}):\n{time_str}\n\nBranch: {self.repo.active_branch.name}")
         except Exception as e:
             self.status_label.configure(text="Status: Git Error")
 
@@ -175,6 +179,201 @@ class InkAdminApp(ctk.CTk):
         self.config_data['showBanner'] = self.banner_var.get()
         self.save_data()
         self.log(f"Banner toggled: {self.banner_var.get()}")
+
+    def setup_studio_tab(self):
+        # Header
+        header = ctk.CTkFrame(self.tab_studio)
+        header.pack(fill="x", padx=5, pady=5)
+        
+        ctk.CTkLabel(header, text="Studio Photos", font=("Arial", 18, "bold")).pack(side="left", padx=10)
+        ctk.CTkButton(header, text="Add Photo", command=self.add_studio_photo).pack(side="right", padx=10)
+        
+        # Scrollable List
+        self.studio_list_frame = ctk.CTkScrollableFrame(self.tab_studio, label_text="Current Slideshow")
+        self.studio_list_frame.pack(fill="both", expand=True, padx=5, pady=5)
+        
+        self.refresh_studio_list()
+
+    def refresh_studio_list(self):
+        for widget in self.studio_list_frame.winfo_children():
+            widget.destroy()
+            
+        # studio_data is loaded in load_data, but we can re-read it here if needed
+        # For simplicity, assuming self.studio_data is up-to-date or reloaded here
+        try:
+            with open(os.path.join(SRC_DATA_DIR, 'studio.json'), 'r') as f:
+                self.studio_data = json.load(f)
+        except FileNotFoundError:
+            self.studio_data = []
+        except Exception as e:
+            self.log(f"Error loading studio data: {e}")
+            self.studio_data = []
+            
+        for item in self.studio_data:
+            row = ctk.CTkFrame(self.studio_list_frame)
+            row.pack(fill="x", pady=2)
+            
+            # Thumbnail
+            try:
+                rel_path = item['src'].lstrip('/')
+                full_path = os.path.join(PROJECT_ROOT, 'public', rel_path)
+                if os.path.exists(full_path):
+                    pil_img = Image.open(full_path)
+                    ctk_img = ctk.CTkImage(light_image=pil_img, dark_image=pil_img, size=(50, 50))
+                    ctk.CTkLabel(row, image=ctk_img, text="").pack(side="left", padx=5)
+                else:
+                    ctk.CTkLabel(row, text="[Missing]", width=50).pack(side="left", padx=5)
+            except:
+                ctk.CTkLabel(row, text="[Error]", width=50).pack(side="left", padx=5)
+
+            ctk.CTkLabel(row, text=f"ID: {item['id']}").pack(side="left", padx=10)
+            ctk.CTkLabel(row, text=item.get('title', 'Untitled')).pack(side="left", padx=10)
+            
+            ctk.CTkButton(row, text="Delete", width=60, fg_color="red", command=lambda i=item['id']: self.delete_studio_photo(i)).pack(side="right", padx=5)
+
+    def add_studio_photo(self):
+        file_path = filedialog.askopenfilename(filetypes=[("All Files", "*.*")])
+        if file_path:
+            title = ctk.CTkInputDialog(text="Enter Title:", title="New Studio Photo").get_input()
+            if not title: return
+            
+            try:
+                # 1. Prepare ID and Filename
+                new_id = max([i['id'] for i in self.studio_data] or [0]) + 1
+                ext = ".jpg" 
+                filename = f"studio-{new_id}{ext}"
+                
+                # Ensure directory exists
+                studio_dir = os.path.join(PROJECT_ROOT, 'public', 'images', 'studio')
+                os.makedirs(studio_dir, exist_ok=True)
+                
+                save_path = os.path.join(studio_dir, filename)
+                
+                # 2. Process Image
+                with Image.open(file_path) as img:
+                    if img.mode != 'RGB':
+                        img = img.convert('RGB')
+                    img.thumbnail((1200, 800)) # Standard resize
+                    img.save(save_path, "JPEG", quality=85)
+                
+                # 3. Update JSON
+                new_item = {
+                    "id": new_id,
+                    "src": f"/images/studio/{filename}",
+                    "title": title
+                }
+                self.studio_data.append(new_item)
+                
+                with open(os.path.join(SRC_DATA_DIR, 'studio.json'), 'w') as f:
+                    json.dump(self.studio_data, f, indent=2)
+                
+                self.log(f"Added studio photo: {title}")
+                self.refresh_studio_list()
+                
+            except Exception as e:
+                self.log(f"Error adding studio photo: {e}")
+                
+    def delete_studio_photo(self, photo_id):
+        item = next((i for i in self.studio_data if i['id'] == photo_id), None)
+        if item:
+            # Delete file
+            try:
+                rel_path = item['src'].lstrip('/')
+                full_path = os.path.join(PROJECT_ROOT, 'public', rel_path)
+                if os.path.exists(full_path):
+                    os.remove(full_path)
+            except Exception as e:
+                self.log(f"Error deleting file: {e}")
+                
+            # Update JSON
+            self.studio_data = [i for i in self.studio_data if i['id'] != photo_id]
+            with open(os.path.join(SRC_DATA_DIR, 'studio.json'), 'w') as f:
+                json.dump(self.studio_data, f, indent=2)
+                
+            self.log(f"Deleted studio photo ID: {photo_id}")
+            self.refresh_studio_list()
+
+    def setup_master_tab(self):
+        self.master_frame = ctk.CTkFrame(self.tab_master)
+        self.master_frame.pack(fill="both", expand=True, padx=20, pady=20)
+        
+        ctk.CTkLabel(self.master_frame, text="Master Profile Photo", font=("Arial", 20, "bold")).pack(pady=10)
+        
+        # Display Current Photo
+        self.master_img_label = ctk.CTkLabel(self.master_frame, text="")
+        self.master_img_label.pack(pady=10)
+        
+        self.refresh_master_preview()
+        
+        ctk.CTkButton(self.master_frame, text="Change Photo", command=self.change_master_photo).pack(pady=20)
+        ctk.CTkLabel(self.master_frame, text="Note: Uploaded photo will be auto-cropped to square.").pack()
+
+    def refresh_master_preview(self):
+        try:
+            with open(os.path.join(SRC_DIR, 'data', 'config.json'), 'r') as f:
+                cfg = json.load(f)
+                
+            rel_path = cfg.get('masterPhoto', '').lstrip('/')
+            full_path = os.path.join(PROJECT_ROOT, 'public', rel_path)
+            
+            if os.path.exists(full_path):
+                pil_img = Image.open(full_path)
+                pil_img.thumbnail((300, 300))
+                ctk_img = ctk.CTkImage(light_image=pil_img, dark_image=pil_img, size=(300, 300))
+                self.master_img_label.configure(image=ctk_img, text="")
+            else:
+                self.master_img_label.configure(image=None, text="[No Photo]")
+        except Exception as e:
+            self.log(f"Error loading master preview: {e}")
+
+    def change_master_photo(self):
+        file_path = filedialog.askopenfilename(filetypes=[("All Files", "*.*")])
+        if file_path:
+            try:
+                # Load Config
+                cfg_path = os.path.join(SRC_DIR, 'data', 'config.json')
+                with open(cfg_path, 'r') as f:
+                    cfg = json.load(f)
+                
+                # Generate new filename to bust cache (simple timestamp)
+                timestamp = int(time.time())
+                filename = f"master_{timestamp}.jpg"
+                save_path = os.path.join(PROJECT_ROOT, 'public', 'images', filename)
+                
+                # Process Image (Square Crop)
+                with Image.open(file_path) as img:
+                    if img.mode != 'RGB':
+                        img = img.convert('RGB')
+                        
+                    # Center Crop to Square
+                    width, height = img.size
+                    new_size = min(width, height)
+                    left = (width - new_size)/2
+                    top = (height - new_size)/2
+                    right = (width + new_size)/2
+                    bottom = (height + new_size)/2
+                    
+                    img = img.crop((left, top, right, bottom))
+                    img.thumbnail((800, 800))
+                    img.save(save_path, "JPEG", quality=90)
+                    
+                # Clean up old photo if exists
+                old_rel = cfg.get('masterPhoto', '').lstrip('/')
+                old_full = os.path.join(PROJECT_ROOT, 'public', old_rel)
+                if os.path.exists(old_full) and "master_" in old_rel: # Safety check
+                    try: os.remove(old_full)
+                    except: pass
+
+                # Update Config
+                cfg['masterPhoto'] = f"/images/{filename}"
+                with open(cfg_path, 'w') as f:
+                    json.dump(cfg, f, indent=2)
+                    
+                self.log("Updated master photo.")
+                self.refresh_master_preview()
+                
+            except Exception as e:
+                self.log(f"Error changing master photo: {e}")
 
     def git_sync(self):
         self.log("Git Sync Started...")
