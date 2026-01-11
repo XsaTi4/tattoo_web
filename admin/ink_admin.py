@@ -75,6 +75,8 @@ class InkAdminApp(ctk.CTk):
         self.update_status()
 
     def ensure_repo(self):
+        global PROJECT_ROOT, SRC_DIR, SRC_DATA_DIR, GALLERY_JSON, CONFIG_JSON, IMAGES_DIR
+        
         # 1. Check if .git exists in PROJECT_ROOT (Local Dev or already setup)
         if os.path.exists(os.path.join(PROJECT_ROOT, '.git')):
             try:
@@ -97,7 +99,6 @@ class InkAdminApp(ctk.CTk):
                         self.repo = git.Repo(REPO_DIR)
                         self.log(f"Repository loaded from portable storage: {REPO_DIR}")
                         # Update global PROJECT_ROOT to point here if not already
-                        global PROJECT_ROOT, SRC_DIR, SRC_DATA_DIR, GALLERY_JSON, CONFIG_JSON, IMAGES_DIR
                         PROJECT_ROOT = REPO_DIR
                         SRC_DIR = os.path.join(PROJECT_ROOT, 'src')
                         SRC_DATA_DIR = os.path.join(SRC_DIR, 'data')
@@ -141,7 +142,6 @@ class InkAdminApp(ctk.CTk):
                          raise Exception("Clone appeared successful but 'src' folder is missing")
 
                     # Update paths after clone
-                    global PROJECT_ROOT, SRC_DIR, SRC_DATA_DIR, GALLERY_JSON, CONFIG_JSON, IMAGES_DIR
                     PROJECT_ROOT = REPO_DIR
                     SRC_DIR = os.path.join(PROJECT_ROOT, 'src')
                     SRC_DATA_DIR = os.path.join(SRC_DIR, 'data')
