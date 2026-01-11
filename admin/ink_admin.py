@@ -9,8 +9,15 @@ import time
 
 # Settings
 # Constants
+# Constants
 APP_NAME = "InkDynastyAdmin"
-DATA_DIR = os.path.join(os.path.expanduser("~"), f".{APP_NAME}")
+# Determine Base Dir for Data
+if getattr(sys, 'frozen', False):
+    BASE_DIR = os.path.dirname(sys.executable)
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+DATA_DIR = os.path.join(BASE_DIR, "ink_data")
 REPO_DIR = os.path.join(DATA_DIR, "repo")
 REMOTE_URL = "https://github.com/XsaTi4/tattoo_web.git"
 
@@ -95,16 +102,40 @@ class InkAdminApp(ctk.CTk):
                 messagebox.showwarning("Warning", "App will run in limited mode without content.")
 
     def load_data(self):
-        with open(GALLERY_JSON, 'r') as f:
-            self.gallery_data = json.load(f)
-        with open(CONFIG_JSON, 'r') as f:
-            self.config_data = json.load(f)
+        # Gallery Data
+        self.gallery_data = []
+        try:
+            if os.path.exists(GALLERY_JSON):
+                with open(GALLERY_JSON, 'r') as f:
+                    self.gallery_data = json.load(f)
+            else:
+                self.log(f"Warning: Gallery data not found at {GALLERY_JSON}")
+        except Exception as e:
+            self.log(f"Error loading gallery data: {e}")
+
+        # Config Data
+        self.config_data = {}
+        try:
+            if os.path.exists(CONFIG_JSON):
+                with open(CONFIG_JSON, 'r') as f:
+                    self.config_data = json.load(f)
+            else:
+                self.log(f"Warning: Config data not found at {CONFIG_JSON}")
+        except Exception as e:
+            self.log(f"Error loading config data: {e}")
 
     def save_data(self):
-        with open(GALLERY_JSON, 'w') as f:
-            json.dump(self.gallery_data, f, indent=2)
-        with open(CONFIG_JSON, 'w') as f:
-            json.dump(self.config_data, f, indent=2)
+        try:
+            if not os.path.exists(SRC_DATA_DIR):
+                os.makedirs(SRC_DATA_DIR, exist_ok=True)
+                
+            with open(GALLERY_JSON, 'w') as f:
+                json.dump(self.gallery_data, f, indent=2)
+            with open(CONFIG_JSON, 'w') as f:
+                json.dump(self.config_data, f, indent=2)
+        except Exception as e:
+            self.log(f"Error saving data: {e}")
+            messagebox.showerror("Save Error", str(e))
 
     def setup_ui(self):
         # Sidebar
