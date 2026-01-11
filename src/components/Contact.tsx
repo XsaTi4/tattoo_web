@@ -4,6 +4,10 @@ import { useLanguage } from '@/context/LanguageContext';
 import styles from './Contact.module.css';
 import { Mail, Send, Instagram } from 'lucide-react';
 
+import config from '@/data/config.json';
+import { motion } from 'framer-motion';
+
+
 export default function Contact() {
     const { t } = useLanguage();
 

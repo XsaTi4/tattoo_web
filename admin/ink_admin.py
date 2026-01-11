@@ -114,8 +114,15 @@ class InkAdminApp(ctk.CTk):
             ctk.CTkButton(row, text="Delete", width=60, fg_color="red", command=lambda i=item['id']: self.delete_photo(i)).pack(side="right", padx=5)
 
     def add_photo(self):
-        # macOS Tkinter fix: separate extensions explicitly
-        file_path = filedialog.askopenfilename(filetypes=[("PNG Image", "*.png"), ("JPEG Image", "*.jpg"), ("JPEG Image", "*.jpeg")])
+        # macOS Tkinter fix: separate extensions explicitly, plus all files
+        file_path = filedialog.askopenfilename(filetypes=[
+            ("All Files", "*.*"),
+            ("JPEG Image", "*.jpg"), 
+            ("JPEG Image", "*.jpeg"),
+            ("PNG Image", "*.png"),
+            ("WebP Image", "*.webp"),
+            ("Bitmap", "*.bmp")
+        ])
         if file_path:
             title = ctk.CTkInputDialog(text="Enter Photo Title:", title="New Photo").get_input()
             if not title: return
@@ -126,8 +133,8 @@ class InkAdminApp(ctk.CTk):
                 save_path = os.path.join(IMAGES_DIR, filename)
                 
                 with Image.open(file_path) as img:
-                    # Fix RGBA error
-                    if img.mode in ('RGBA', 'P'): 
+                    # Force RGB for JPEG compatibility (handles RGBA, P, LA, etc.)
+                    if img.mode != 'RGB':
                         img = img.convert('RGB')
                         
                     img.thumbnail((1200, 1200)) # Resize

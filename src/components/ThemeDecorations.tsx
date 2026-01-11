@@ -1,39 +1,34 @@
 'use client';
 
 import config from '@/data/config.json';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import styles from './ThemeDecorations.module.css';
 
-const THEMES = {
+interface ThemeConfig {
+    scroll: string[];
+}
+
+const THEMES: Record<string, ThemeConfig> = {
     halloween: {
-        top: '🎃',
-        scroll: ['🦇', '🕸️', '👻'],
-        bottom: ['🕯️', '🕯️']
+        scroll: ['🦇', '🕸️', '👻', '🎃', '🕯️'],
     },
     newyear: {
-        top: '🎄',
-        scroll: ['❄️', '✨', '🎁'],
-        bottom: ['☃️', '☃️']
+        scroll: ['❄️', '✨', '🎁', '🎄', '☃️'],
     },
     default: {
-        top: null,
         scroll: [],
-        bottom: []
     }
 };
 
 export default function ThemeDecorations() {
     const [theme, setTheme] = useState('default');
-    const [data, setData] = useState(THEMES.default);
+    const [data, setData] = useState<ThemeConfig>(THEMES.default);
     const [currentConfig, setCurrentConfig] = useState(config);
-    const { scrollYProgress } = useScroll();
-    const rotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
 
     useEffect(() => {
         setCurrentConfig(config);
         setTheme(config.theme);
-        // @ts-ignore
         setData(THEMES[config.theme] || THEMES.default);
     }, [config]);
 
@@ -41,17 +36,6 @@ export default function ThemeDecorations() {
 
     return (
         <div className={styles.container}>
-            {/* Fixed Top Decoration */}
-            {data.top && (
-                <motion.div
-                    className={styles.topDeco}
-                    animate={{ scale: [1, 1.1, 1], filter: ["drop-shadow(0 0 10px gold)", "drop-shadow(0 0 20px red)", "drop-shadow(0 0 10px gold)"] }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                >
-                    {data.top}
-                </motion.div>
-            )}
-
             {/* Scrolling/Floating Items */}
             {data.scroll.map((icon, index) => (
                 <ScrollItem key={index} icon={icon} index={index} />
@@ -60,20 +44,6 @@ export default function ThemeDecorations() {
             {data.scroll.map((icon, index) => (
                 <ScrollItem key={`d-${index}`} icon={icon} index={index + 5} />
             ))}
-
-            {/* Fixed Bottom Decoration */}
-            <div className={styles.bottomRow}>
-                {data.bottom.map((icon, index) => (
-                    <motion.div
-                        key={index}
-                        className={styles.bottomDeco}
-                        animate={{ y: [0, -10, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, delay: index }}
-                    >
-                        {icon}
-                    </motion.div>
-                ))}
-            </div>
         </div>
     );
 }

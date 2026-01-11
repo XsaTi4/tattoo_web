@@ -84,6 +84,32 @@
 }
 
 @media (max-width: 768px) {
+    .card {
+        padding: 1.5rem;
+    }
+}
+
+.decorationsRow {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 10%;
+    margin-top: 2rem;
+    pointer-events: none;
+}
+
+.decoItem {
+    font-size: 3rem;
+    cursor: grab;
+    pointer-events: auto;
+    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+}
+
+.decoItem:active {
+    cursor: grabbing;
+}
+
+@media (max-width: 768px) {
     .gothicLink {
         width: 100%;
         justify-content: center;

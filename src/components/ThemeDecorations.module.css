@@ -9,33 +9,13 @@
     overflow: hidden;
 }
 
-.topDeco {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 5rem;
-    z-index: 50;
-    cursor: pointer;
-    pointer-events: auto;
+/* Top decoration removed */
+
+.topDeco:active {
+    cursor: grabbing;
 }
 
-.bottomRow {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 10%;
-    font-size: 4rem;
-    z-index: 50;
-}
-
-.bottomDeco {
-    pointer-events: auto;
-    cursor: grab;
-}
+/* Bottom styles moved to Contact */
 
 .floatingDeco {
     position: absolute;
