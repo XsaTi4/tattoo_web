@@ -2,7 +2,7 @@
 
 import { useLanguage } from '@/context/LanguageContext';
 import styles from './Contact.module.css';
-import { Mail, Phone, Instagram } from 'lucide-react';
+import { Mail, Send, Instagram } from 'lucide-react';
 
 export default function Contact() {
     const { t } = useLanguage();
@@ -12,27 +12,24 @@ export default function Contact() {
             <h2 className={styles.title}>{t.contact.title}</h2>
 
             <div className={styles.card}>
-                <div className={styles.item}>
-                    <Mail className={styles.icon} />
-                    <span className={styles.label}>{t.contact.email}</span>
-                    <a href="mailto:contact@nnnwwb.com" className={styles.link}>contact@nnnwwb.com</a>
-                </div>
+                <a href="mailto:valerijaavdina@inbox.lv" className={styles.gothicLink}>
+                    <div className={styles.iconBox}><Mail /></div>
+                    <span className={styles.linkText}>valerijaavdina@inbox.lv</span>
+                </a>
 
-                <div className={styles.item}>
-                    <Phone className={styles.icon} />
-                    <span className={styles.label}>{t.contact.phone}</span>
-                    <a href="tel:+37120000000" className={styles.link}>+371 20000000</a>
-                </div>
+                <a href="https://t.me/nnnwwb" target="_blank" rel="noopener noreferrer" className={styles.gothicLink}>
+                    <div className={styles.iconBox}><Send /></div>
+                    <span className={styles.linkText}>@nnnwwb</span>
+                </a>
 
-                <div className={styles.item}>
-                    <Instagram className={styles.icon} />
-                    <span className={styles.label}>{t.contact.instagram}</span>
-                    <a href="https://instagram.com/nnnwwb" target="_blank" rel="noopener noreferrer" className={styles.link}>@nnnwwb</a>
-                </div>
+                <a href="https://instagram.com/nnnwwb" target="_blank" rel="noopener noreferrer" className={styles.gothicLink}>
+                    <div className={styles.iconBox}><Instagram /></div>
+                    <span className={styles.linkText}>@nnnwwb</span>
+                </a>
             </div>
 
             <footer className={styles.footer}>
-                &copy; {new Date().getFullYear()} NNNWWB. All Rights Reserved.
+                &copy; {new Date().getFullYear()} Ink Dynasty.
             </footer>
         </section>
     );

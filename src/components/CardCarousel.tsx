@@ -62,6 +62,20 @@ export default function CardCarousel({ images, onOpenGallery }: CardCarouselProp
                             }}
                         >
                             <img src={img.src} alt={img.title} className={styles.image} />
+
+                            {/* Title Overlay for Active Card */}
+                            <AnimatePresence>
+                                {offset === 0 && (
+                                    <motion.div
+                                        className={styles.cardOverlay}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                    >
+                                        <span className={styles.cardTitle}>{img.title}</span>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </motion.div>
                     );
                 })}

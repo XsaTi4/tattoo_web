@@ -1,64 +1,91 @@
 .contact {
-    padding: 6rem 2rem 2rem;
-    background: #050505;
+    padding: 8rem 2rem 4rem;
+    background: radial-gradient(circle at bottom, #111 0%, #000 100%);
     text-align: center;
     border-top: 1px solid #222;
+    position: relative;
 }
 
 .title {
-    font-size: 3rem;
-    margin-bottom: 4rem;
+    font-size: 3.5rem;
+    margin-bottom: 5rem;
     color: var(--accent);
+    font-family: var(--font-serif);
+    text-shadow: 0 0 20px rgba(192, 192, 192, 0.2);
 }
 
 .card {
     display: flex;
     justify-content: center;
-    gap: 4rem;
+    gap: 3rem;
     flex-wrap: wrap;
     max-width: 1000px;
     margin: 0 auto 6rem;
 }
 
-.item {
+.gothicLink {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 1rem;
-}
-
-.icon {
-    width: 40px;
-    height: 40px;
-    color: var(--accent);
-}
-
-.label {
+    gap: 1.5rem;
+    padding: 1.5rem 3rem;
+    border: 1px solid var(--accent);
+    color: var(--foreground);
+    text-decoration: none;
     font-family: var(--font-serif);
-    font-size: 0.9rem;
-    color: #666;
+    font-size: 1.2rem;
+    transition: all 0.4s ease;
+    background: rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+    min-width: 280px;
+}
+
+.gothicLink::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.4s ease;
+    z-index: 0;
+    opacity: 0.1;
+}
+
+.gothicLink:hover::before {
+    width: 100%;
+}
+
+.gothicLink:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border-color: #fff;
+}
+
+.iconBox {
+    z-index: 1;
+    display: flex;
+    align-items: center;
+}
+
+.linkText {
+    z-index: 1;
     text-transform: uppercase;
-}
-
-.link {
-    font-size: 1.1rem;
-    transition: color 0.3s;
-}
-
-.link:hover {
-    color: var(--accent);
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    letter-spacing: 0.1em;
 }
 
 .footer {
     color: #444;
     font-size: 0.8rem;
     margin-top: 4rem;
+    font-family: var(--font-sans);
+    letter-spacing: 0.2em;
 }
 
-@media (max-width: 600px) {
-    .card {
-        flex-direction: column;
-        gap: 3rem;
+@media (max-width: 768px) {
+    .gothicLink {
+        width: 100%;
+        justify-content: center;
     }
 }

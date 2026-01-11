@@ -1,0 +1,59 @@
+.banner {
+    width: 100%;
+    padding: 0.5rem;
+    text-align: center;
+    position: relative;
+    z-index: 100;
+    font-family: var(--font-serif);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: bold;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+}
+
+.default {
+    background: var(--accent);
+    color: #000;
+}
+
+.halloween {
+    background: #ff6600;
+    /* Pumpkin Orange */
+    color: #000;
+    border-bottom: 2px solid #660099;
+}
+
+.newyear {
+    background: linear-gradient(90deg, #d4af37, #f2f2f2, #d4af37);
+    /* Gold/Silver */
+    color: #000;
+}
+
+.text {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.8;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.8;
+    }
+}
+
+/* Global Theme Overrides applied via data-theme on body */
+:global(body[data-theme='halloween']) {
+    --accent: #ff6600 !important;
+    --background: #0f0505 !important;
+}
+
+:global(body[data-theme='newyear']) {
+    --accent: #d4af37 !important;
+    /* Gold */
+}

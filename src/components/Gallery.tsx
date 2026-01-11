@@ -6,16 +6,9 @@ import styles from './Gallery.module.css';
 import { X, ZoomIn, ZoomOut } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CardCarousel from './CardCarousel';
+import galleryData from '@/data/gallery.json';
 
-// Placeholder data - replace with real images later
-const artworks = [
-    { id: 1, src: '/images/tattoo-1.png', title: 'Gothic Raven' },
-    { id: 2, src: '/images/tattoo-1.png', title: 'Skull Study' },
-    { id: 3, src: '/images/tattoo-1.png', title: 'Raven' },
-    { id: 4, src: '/images/tattoo-1.png', title: 'Abstract Lines' },
-    { id: 5, src: '/images/tattoo-1.png', title: 'Dark Sleeve' },
-    { id: 6, src: '/images/tattoo-1.png', title: 'Geometric' },
-];
+const artworks = galleryData;
 
 export default function Gallery() {
     const { t } = useLanguage();
