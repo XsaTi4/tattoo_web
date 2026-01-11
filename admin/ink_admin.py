@@ -8,32 +8,44 @@ from tkinter import filedialog, messagebox
 import time
 
 # Settings
-import sys
+# Constants
+APP_NAME = "InkDynastyAdmin"
+DATA_DIR = os.path.join(os.path.expanduser("~"), f".{APP_NAME}")
+REPO_DIR = os.path.join(DATA_DIR, "repo")
+REMOTE_URL = "https://github.com/XsaTi4/tattoo_web.git"
 
-# Determine base path
+# Determine Project Root
+# 1. Check Local (Development / Local Usage)
+detected_root = None
 if getattr(sys, 'frozen', False):
-    # If compiled, use the directory of the executable
     exe_dir = os.path.dirname(sys.executable)
-    # Check if we are likely in a 'dist' folder (common when testing)
-    if os.path.basename(exe_dir).lower() == 'dist':
-        # Check if parent has .git
-        parent_dir = os.path.dirname(exe_dir)
-        if os.path.exists(os.path.join(parent_dir, '.git')):
-            PROJECT_ROOT = parent_dir
-        else:
-            PROJECT_ROOT = exe_dir
-    else:
-        PROJECT_ROOT = exe_dir
+    # Check distinct locations relative to exe
+    candidates = [exe_dir, os.path.dirname(exe_dir)] 
+    for path in candidates:
+        if os.path.exists(os.path.join(path, '.git')):
+            detected_root = path
+            break
 else:
-    # If script, we are in website/admin/ -> go up one level
-    PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+    # Script mode
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    parent = os.path.dirname(script_dir)
+    if os.path.exists(os.path.join(parent, '.git')):
+        detected_root = parent
 
-# Final verification for Git Repo
-if not os.path.exists(os.path.join(PROJECT_ROOT, '.git')):
-    # Try one level up just in case (e.g. if exe is in website/bin/)
-    parent_try = os.path.dirname(PROJECT_ROOT)
-    if os.path.exists(os.path.join(parent_try, '.git')):
-        PROJECT_ROOT = parent_try
+# 2. If no local repo found, use Portable System Dir
+if detected_root:
+    PROJECT_ROOT = detected_root
+    IS_PORTABLE = False
+else:
+    PROJECT_ROOT = REPO_DIR
+    IS_PORTABLE = True
+
+# Ensure paths are valid even if they don't exist yet (for cloning)
+SRC_DIR = os.path.join(PROJECT_ROOT, 'src')
+SRC_DATA_DIR = os.path.join(SRC_DIR, 'data')
+GALLERY_JSON = os.path.join(SRC_DATA_DIR, 'gallery.json')
+CONFIG_JSON = os.path.join(SRC_DATA_DIR, 'config.json')
+IMAGES_DIR = os.path.join(PROJECT_ROOT, 'public', 'images')
 
 SRC_DIR = os.path.join(PROJECT_ROOT, 'src')
 SRC_DATA_DIR = os.path.join(SRC_DIR, 'data')
