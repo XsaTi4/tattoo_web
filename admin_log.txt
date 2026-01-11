@@ -25,5 +25,23 @@
 [2026-01-11 20:21:54] Updated master photo.
 [2026-01-11 20:22:09] Updated master photo.
 [2026-01-11 20:22:15] Git Sync Started...
+<<<<<<< HEAD
 [2026-01-11 20:22:15] Committed changes locally.
 [2026-01-11 20:22:16] Pushed to origin/main successfully.
+=======
+[2026-01-11 20:40:47] Admin Console Started.
+[2026-01-11 20:40:51] Theme changed to: halloween
+[2026-01-11 20:40:53] Theme changed to: newyear
+[2026-01-11 20:40:54] Banner toggled: True
+[2026-01-11 20:40:54] Banner toggled: False
+[2026-01-11 20:41:02] Moved photo 1 down in studio
+[2026-01-11 20:41:03] Moved photo 3 up in studio
+[2026-01-11 20:41:05] Moved photo 3 up in studio
+[2026-01-11 20:41:08] Moved photo 1 down in gallery
+[2026-01-11 20:41:09] Moved photo 1 down in gallery
+[2026-01-11 20:41:20] Git Sync Started...
+[2026-01-11 20:41:20] Committed changes locally.
+[2026-01-11 20:41:21] Pushed to origin/main successfully.
+[2026-01-11 20:42:44] Theme changed to: default
+[2026-01-11 20:42:50] Git Sync Started...
+>>>>>>> 5abdad0576b2e0eb13ce923cd55d85b45afbcfcf
