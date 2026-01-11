@@ -1,22 +1,9 @@
 import os
-import sys
-
-# Silence GitPython's "Bad git executable" error
-os.environ["GIT_PYTHON_REFRESH"] = "quiet"
-
 import json
 import shutil
 from PIL import Image
-
-# Wrap git import to prevent crash on systems without git
-try:
-    import git
-    GIT_AVAILABLE = True
-except ImportError:
-    GIT_AVAILABLE = False
-
+import git
 import customtkinter as ctk
-import webbrowser
 from tkinter import filedialog, messagebox
 import time
 
@@ -90,14 +77,6 @@ class InkAdminApp(ctk.CTk):
     def ensure_repo(self):
         global PROJECT_ROOT, SRC_DIR, SRC_DATA_DIR, GALLERY_JSON, CONFIG_JSON, IMAGES_DIR
         
-        # 0. Check for Git Dependency
-        if not GIT_AVAILABLE or not shutil.which('git'):
-            answer = messagebox.askyesno("Missing Dependency", "Git is not installed or not found in PATH.\n\nThis app requires Git to sync with the website.\n\nWould you like to open the Git download page?")
-            if answer:
-                webbrowser.open("https://git-scm.com/downloads")
-            self.log("Error: Git executable not found.")
-            return
-
         # 1. Check if .git exists in PROJECT_ROOT (Local Dev or already setup)
         if os.path.exists(os.path.join(PROJECT_ROOT, '.git')):
             try:
