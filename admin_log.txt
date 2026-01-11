@@ -61,3 +61,13 @@
 [2026-01-11 23:42:34] Moved photo 3 down in studio
 [2026-01-11 23:42:35] Moved photo 3 down in studio
 [2026-01-11 23:43:54] Git Sync Started...
+[2026-01-11 23:43:54] Committed changes locally.
+[2026-01-11 23:47:36] Git Error: Cmd('git') failed due to: exit code(128)
+  cmdline: git push --set-upstream origin main
+  stderr: 'remote: Permission to XsaTi4/tattoo_web.git denied to nnnwwb.
+fatal: unable to access 'https://github.com/XsaTi4/tattoo_web.git/': The requested URL returned error: 403'
+[2026-01-11 23:58:47] Error loading repo: InkAdminApp.fetch_updates() got an unexpected keyword argument 'silent'
+[2026-01-11 23:58:47] Admin Console Started.
+[2026-01-11 23:58:52] Fetching updates from remote...
+[2026-01-11 23:58:53] Successfully pulled latest changes.
+[2026-01-11 23:59:21] Git Sync Started...
