@@ -19,8 +19,8 @@ const lato = Lato({
 });
 
 export const metadata: Metadata = {
-  title: "Ink Dynasty - Tattoo Portfolio",
-  description: "Gothic Tattoo Art Portfolio",
+  title: "ink dynasty",
+  description: "nnnwwb`s portfollio",
 };
 
 export default function RootLayout({
