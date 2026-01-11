@@ -13,14 +13,27 @@ import sys
 # Determine base path
 if getattr(sys, 'frozen', False):
     # If compiled, use the directory of the executable
-    PROJECT_ROOT = os.path.dirname(sys.executable)
-    # However, if we assume the exe is inside 'website/admin/dist', we might need to go up?
-    # User said: "stored in a folder that will be created in the same directory as the application"
-    # Let's assume the user places the EXE in the root 'website' folder or we treat the CWD/ExeDir as root.
-    # Safe bet: The EXE is placed in the project root.
+    exe_dir = os.path.dirname(sys.executable)
+    # Check if we are likely in a 'dist' folder (common when testing)
+    if os.path.basename(exe_dir).lower() == 'dist':
+        # Check if parent has .git
+        parent_dir = os.path.dirname(exe_dir)
+        if os.path.exists(os.path.join(parent_dir, '.git')):
+            PROJECT_ROOT = parent_dir
+        else:
+            PROJECT_ROOT = exe_dir
+    else:
+        PROJECT_ROOT = exe_dir
 else:
     # If script, we are in website/admin/ -> go up one level
     PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
+# Final verification for Git Repo
+if not os.path.exists(os.path.join(PROJECT_ROOT, '.git')):
+    # Try one level up just in case (e.g. if exe is in website/bin/)
+    parent_try = os.path.dirname(PROJECT_ROOT)
+    if os.path.exists(os.path.join(parent_try, '.git')):
+        PROJECT_ROOT = parent_try
 
 SRC_DIR = os.path.join(PROJECT_ROOT, 'src')
 SRC_DATA_DIR = os.path.join(SRC_DIR, 'data')
