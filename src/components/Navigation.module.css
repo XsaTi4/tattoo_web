@@ -14,7 +14,8 @@
 .navLink {
     background: none;
     border: none;
-    color: #fff;
+    color: #888;
+    /* Dim inactive */
     font-family: var(--font-serif);
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -22,26 +23,34 @@
     font-size: 0.9rem;
     transition: color 0.3s;
     position: relative;
+    padding: 0.5rem 1rem;
 }
 
-.navLink:hover {
-    color: var(--accent);
+.navLink:hover,
+.active {
+    color: #fff;
 }
 
-.navLink::after {
-    content: '';
+.linkText {
+    position: relative;
+    z-index: 10;
+}
+
+.activeIndicator {
     position: absolute;
-    width: 0;
-    height: 1px;
-    bottom: -5px;
-    left: 50%;
-    background: var(--accent);
-    transition: all 0.3s;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--accent);
+    /* Alternatively, for a "pill" look: */
+    /* top: 0; bottom: 0; border-radius: 99px; background: rgba(255, 255, 255, 0.1); z-index: 0; height: auto; */
+    z-index: 1;
 }
 
-.navLink:hover::after {
-    width: 100%;
-    left: 0;
+/* Remove old hover effect */
+.navLink::after {
+    display: none;
 }
 
 @media (max-width: 600px) {
