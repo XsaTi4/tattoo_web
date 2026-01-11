@@ -9,17 +9,23 @@ export const translations = {
             contact: "Kontakti",
         },
         hero: {
-            title: "NNNWWB",
+            title: "Ink Dynasty",
             subtitle: "Tetovēšanas Māksla",
             cta: "Skatīt darbus",
         },
         about: {
             title: "Par Mani",
-            description: "Esmu tetovēšanas meistars ar aizrautību pret gotisko stilu un detaļām...",
+            description: "Es veicu tetovējumus rūpīgi un ar uzmanību pret detaļām. Es cenšos, lai katrs darbs būtu skaidrs, kārtīgs un priecētu ilgu laiku.",
+            intro: "Ja Tevi uzrunā mans stils - būšu priecīga redzēt Tevi seansā."
         },
         studio: {
             title: "Studija",
-            description: "Mūsu studija ir vieta, kur māksla satiekas ar profesionalitāti...",
+            description: "Neliela, mājīga studija. Klusi, mierīgi, bez lieka trokšņa. Šeit var atpūsties, uzdot jautājumus un justies drošībā.",
+        },
+        works: {
+            title: "Mani Darbi",
+            intro: "Šeit ir apkopoti mani darbi. Visi veikti rūpīgi un ar uzmanību pret detaļām.",
+            cta: "Skatīt visus",
         },
         contact: {
             title: "Kontakti",
@@ -36,17 +42,23 @@ export const translations = {
             contact: "Контакты",
         },
         hero: {
-            title: "NNNWWB",
+            title: "Ink Dynasty",
             subtitle: "Искусство Татуировки",
             cta: "Смотреть работы",
         },
         about: {
             title: "Обо Мне",
-            description: "Я тату-мастер со страстью к готическому стилю и деталям...",
+            description: "Делаю татуировки аккуратно и с вниманием к деталям. Стараюсь, чтобы каждая работа была понятной, аккуратной и радовала долгое время.",
+            intro: "Если тебе откликается мой стиль - буду рада видеть тебя на сеансе."
         },
         studio: {
             title: "Студия",
-            description: "Наша студия - это место, где искусство встречается с профессионализмом...",
+            description: "Небольшая уютная студия. Тихо, спокойно, без лишнего шума. Можно расслабиться, задать вопросы и чувствовать себя в безопасности.",
+        },
+        works: {
+            title: "Мои Работы",
+            intro: "Здесь собраны мои работы. Все выполнены аккуратно и с вниманием к деталям.",
+            cta: "Смотреть все",
         },
         contact: {
             title: "Контакты",
@@ -63,17 +75,23 @@ export const translations = {
             contact: "Contacts",
         },
         hero: {
-            title: "NNNWWB",
+            title: "Ink Dynasty",
             subtitle: "Tattoo Art",
             cta: "View Work",
         },
         about: {
             title: "About Me",
-            description: "I am a tattoo artist with a passion for gothic style and details...",
+            description: "I perform tattoos with care and attention to detail. I strive for every piece to be clear, neat, and a source of joy for a long time.",
+            intro: "If my style resonates with you - I'll be glad to see you at a session."
         },
         studio: {
             title: "The Studio",
-            description: "Our studio is where art meets professionalism...",
+            description: "A small, cozy studio. Quiet, calm, without unnecessary noise. You can relax, ask questions, and feel safe.",
+        },
+        works: {
+            title: "My Work",
+            intro: "Here are my collected works. All done with care and attention to detail.",
+            cta: "View All",
         },
         contact: {
             title: "Contacts",

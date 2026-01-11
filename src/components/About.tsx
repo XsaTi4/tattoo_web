@@ -13,6 +13,8 @@ export default function About() {
                 <div className={styles.textBlock}>
                     <h2 className={styles.heading}>{t.about.title}</h2>
                     <p className={styles.text}>{t.about.description}</p>
+                    <br />
+                    <p className={styles.text} style={{ fontStyle: 'italic', color: 'var(--accent)' }}>{t.about.intro}</p>
                 </div>
                 <div className={styles.imageBlock}>
                     <Frame>
@@ -22,7 +24,7 @@ export default function About() {
                 </div>
             </div>
 
-            <div className={`${styles.section} ${styles.reverse}`}>
+            <div className={`${styles.section} ${styles.reverse}`} id="studio">
                 <div className={styles.textBlock}>
                     <h2 className={styles.heading}>{t.studio.title}</h2>
                     <p className={styles.text}>{t.studio.description}</p>

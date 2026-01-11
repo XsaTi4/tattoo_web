@@ -17,7 +17,7 @@ const lato = Lato({
 });
 
 export const metadata: Metadata = {
-  title: "NNNWWB - Tattoo Portfolio",
+  title: "Ink Dynasty - Tattoo Portfolio",
   description: "Gothic Tattoo Art Portfolio",
 };
 
