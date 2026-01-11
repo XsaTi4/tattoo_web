@@ -9,7 +9,7 @@ datas += tmp_ret[0]; binaries += tmp_ret[1]; hiddenimports += tmp_ret[2]
 
 
 a = Analysis(
-    ['admin\\ink_admin.py'],
+    ['admin/ink_admin.py'],
     pathex=[],
     binaries=binaries,
     datas=datas,
@@ -42,5 +42,11 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['admin\\app_icon.png'],
+    icon=['admin/app_icon.png'],
+)
+app = BUNDLE(
+    exe,
+    name='InkAdmin.app',
+    icon='admin/app_icon.png',
+    bundle_identifier=None,
 )
