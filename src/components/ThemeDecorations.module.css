@@ -5,17 +5,46 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
-    /* Let clicks pass through to content */
-    z-index: 50;
-    /* Above content but below modals/nav if needed */
+    z-index: 40;
     overflow: hidden;
 }
 
-.decoration {
+.topDeco {
     position: absolute;
-    font-size: 3rem;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 5rem;
+    z-index: 50;
+    cursor: pointer;
     pointer-events: auto;
-    /* Re-enable pointer events for the decorations themselves */
-    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
-    user-select: none;
+}
+
+.bottomRow {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10%;
+    font-size: 4rem;
+    z-index: 50;
+}
+
+.bottomDeco {
+    pointer-events: auto;
+    cursor: grab;
+}
+
+.floatingDeco {
+    position: absolute;
+    top: -10vh;
+    font-size: 2.5rem;
+    opacity: 0.7;
+    pointer-events: auto;
+}
+
+.floatingDeco:hover {
+    scale: 1.5;
 }

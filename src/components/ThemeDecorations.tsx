@@ -1,70 +1,103 @@
 'use client';
 
-import { useLanguage } from '@/context/LanguageContext';
 import config from '@/data/config.json';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import styles from './ThemeDecorations.module.css';
 
-const THEME_ICONS: Record<string, string[]> = {
-    halloween: ['🎃', '👻', '🦇', '🕸️'],
-    newyear: ['🎄', '🎅', '❄️', '🎁', '✨'],
-    default: [] // No decorations for default
+const THEMES = {
+    halloween: {
+        top: '🎃',
+        scroll: ['🦇', '🕸️', '👻'],
+        bottom: ['🕯️', '🕯️']
+    },
+    newyear: {
+        top: '🎄',
+        scroll: ['❄️', '✨', '🎁'],
+        bottom: ['☃️', '☃️']
+    },
+    default: {
+        top: null,
+        scroll: [],
+        bottom: []
+    }
 };
 
 export default function ThemeDecorations() {
     const [theme, setTheme] = useState('default');
-    const [icons, setIcons] = useState<string[]>([]);
-    // Use config to track updates
+    const [data, setData] = useState(THEMES.default);
     const [currentConfig, setCurrentConfig] = useState(config);
+    const { scrollYProgress } = useScroll();
+    const rotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
 
     useEffect(() => {
         setCurrentConfig(config);
         setTheme(config.theme);
-        setIcons(THEME_ICONS[config.theme] || []);
-    }, [config]); // Re-run when config module updates (HMR)
+        // @ts-ignore
+        setData(THEMES[config.theme] || THEMES.default);
+    }, [config]);
 
-    if (theme === 'default' || icons.length === 0) return null;
+    if (theme === 'default') return null;
 
     return (
         <div className={styles.container}>
-            {icons.map((icon, index) => (
-                <DecorationItem key={index} icon={icon} index={index} />
+            {/* Fixed Top Decoration */}
+            {data.top && (
+                <motion.div
+                    className={styles.topDeco}
+                    animate={{ scale: [1, 1.1, 1], filter: ["drop-shadow(0 0 10px gold)", "drop-shadow(0 0 20px red)", "drop-shadow(0 0 10px gold)"] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                >
+                    {data.top}
+                </motion.div>
+            )}
+
+            {/* Scrolling/Floating Items */}
+            {data.scroll.map((icon, index) => (
+                <ScrollItem key={index} icon={icon} index={index} />
             ))}
-            {/* Add a few more random ones for density if needed */}
-            {icons.map((icon, index) => (
-                <DecorationItem key={`dup-${index}`} icon={icon} index={index + 5} />
+            {/* Duplicates for density */}
+            {data.scroll.map((icon, index) => (
+                <ScrollItem key={`d-${index}`} icon={icon} index={index + 5} />
             ))}
+
+            {/* Fixed Bottom Decoration */}
+            <div className={styles.bottomRow}>
+                {data.bottom.map((icon, index) => (
+                    <motion.div
+                        key={index}
+                        className={styles.bottomDeco}
+                        animate={{ y: [0, -10, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, delay: index }}
+                    >
+                        {icon}
+                    </motion.div>
+                ))}
+            </div>
         </div>
     );
 }
 
-function DecorationItem({ icon, index }: { icon: string; index: number }) {
-    // Randomize initial position
-    const randomX = Math.floor(Math.random() * 90) + 5; // 5% to 95%
-    const randomY = Math.floor(Math.random() * 80) + 10; // 10% to 90%
-    const delay = index * 0.5;
+function ScrollItem({ icon, index }: { icon: string; index: number }) {
+    const randomX = (index * 13 + 7) % 90; // determinstic random-ish pos
+    const delay = index * 0.8;
 
     return (
         <motion.div
-            className={styles.decoration}
-            initial={{ x: `${randomX}vw`, y: -100, opacity: 0 }}
+            className={styles.floatingDeco}
+            style={{ left: `${randomX}vw` }}
+            initial={{ y: -100, opacity: 0 }}
             animate={{
-                y: [`${randomY}vh`, `${randomY + 5}vh`, `${randomY}vh`],
-                rotate: [0, 10, -10, 0],
-                opacity: 0.8
+                y: '100vh',
+                rotate: [0, 360],
+                opacity: [0, 1, 1, 0]
             }}
             transition={{
-                y: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-                rotate: { duration: 6, repeat: Infinity, ease: "easeInOut" },
-                opacity: { duration: 1 },
+                duration: 15 + index,
+                repeat: Infinity,
+                ease: "linear",
                 delay: delay
             }}
-            drag
-            dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
-            dragElastic={0.2}
-            whileHover={{ scale: 1.2, cursor: 'grab' }}
-            whileTap={{ scale: 0.9, cursor: 'grabbing' }}
         >
             {icon}
         </motion.div>
