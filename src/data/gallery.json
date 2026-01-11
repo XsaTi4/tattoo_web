@@ -1,5 +1,10 @@
 [
   {
+    "id": 8,
+    "src": "/images/tattoo-107.jpg",
+    "title": "Scripted Devotion"
+  },
+  {
     "id": 1,
     "src": "/images/tattoo-100.jpg",
     "title": "Delicate Minimalism"
@@ -28,11 +33,6 @@
     "id": 6,
     "src": "/images/tattoo-105.jpg",
     "title": "Conceptual Realism"
-  },
-  {
-    "id": 8,
-    "src": "/images/tattoo-107.jpg",
-    "title": "Scripted Devotion"
   },
   {
     "id": 7,
