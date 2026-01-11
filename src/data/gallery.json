@@ -30,13 +30,13 @@
     "title": "Conceptual Realism"
   },
   {
-    "id": 7,
-    "src": "/images/tattoo-106.jpg",
-    "title": "Emotional Portraiture"
-  },
-  {
     "id": 8,
     "src": "/images/tattoo-107.jpg",
     "title": "Scripted Devotion"
+  },
+  {
+    "id": 7,
+    "src": "/images/tattoo-106.jpg",
+    "title": "Emotional Portraiture"
   }
 ]

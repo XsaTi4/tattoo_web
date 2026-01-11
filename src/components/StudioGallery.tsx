@@ -22,8 +22,8 @@ export default function StudioGallery({ images }: StudioGalleryProps) {
     // Auto-play
     useEffect(() => {
         const timer = setInterval(() => {
-            setCurrentIndex((prev) => (prev + 1) % images.length);
             setDirection(1);
+            setCurrentIndex((prev) => (prev + 1) % images.length);
         }, 5000);
         return () => clearInterval(timer);
     }, [images.length]);
@@ -41,22 +41,50 @@ export default function StudioGallery({ images }: StudioGalleryProps) {
 
     if (!images || images.length === 0) return null;
 
+    const variants = {
+        enter: (direction: number) => ({
+            x: direction > 0 ? 50 : -50,
+            opacity: 0,
+            scale: 0.95
+        }),
+        center: {
+            zIndex: 1,
+            x: 0,
+            opacity: 1,
+            scale: 1
+        },
+        exit: (direction: number) => ({
+            zIndex: 0,
+            x: direction < 0 ? 50 : -50,
+            opacity: 0,
+            scale: 0.95
+        })
+    };
+
     return (
         <div className={styles.galleryContainer}>
             <div className={styles.slider}>
-                <AnimatePresence initial={false} custom={direction}>
+                <AnimatePresence initial={false} custom={direction} mode="popLayout">
                     <motion.img
                         key={currentIndex}
                         src={images[currentIndex].src}
                         custom={direction}
-                        initial={{ opacity: 0, x: direction > 0 ? 100 : -100 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: direction > 0 ? -100 : 100 }}
-                        transition={{ duration: 0.5 }}
+                        variants={variants}
+                        initial="enter"
+                        animate="center"
+                        exit="exit"
+                        transition={{
+                            x: { type: "spring", stiffness: 300, damping: 30 },
+                            opacity: { duration: 0.5 }
+                        }}
                         className={styles.image}
                         alt={images[currentIndex].title}
                     />
                 </AnimatePresence>
+
+                <div className={styles.overlay}>
+                    <p className={styles.title}>{images[currentIndex].title}</p>
+                </div>
 
                 <button className={`${styles.navBtn} ${styles.prev}`} onClick={prevSlide}>
                     <ChevronLeft />

@@ -24,6 +24,27 @@
     border-radius: var(--radius);
 }
 
+.overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 2rem 1rem 1rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    z-index: 2;
+    pointer-events: none;
+    text-align: center;
+}
+
+.title {
+    color: #fff;
+    font-size: 1.2rem;
+    font-family: var(--font-serif);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Nav Buttons */
 .navBtn {
     position: absolute;
     top: 50%;

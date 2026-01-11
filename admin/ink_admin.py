@@ -86,14 +86,28 @@ class InkAdminApp(ctk.CTk):
         self.setup_console_tab()
 
     def setup_console_tab(self):
-        self.log_widget = ctk.CTkTextbox(self.tab_console)
+        self.log_widget = ctk.CTkTextbox(self.tab_console, state="disabled")
         self.log_widget.pack(fill="both", expand=True, padx=5, pady=5)
         self.log("Admin Console Started.")
 
     def log(self, message):
+        timestamp = time.strftime("[%Y-%m-%d %H:%M:%S]")
+        full_msg = f"{timestamp} {message}"
+        
+        # UI Log
         if hasattr(self, 'log_widget'):
-            self.log_widget.insert("end", f"> {message}\n")
+            self.log_widget.configure(state="normal")
+            self.log_widget.insert("end", f"> {full_msg}\n")
             self.log_widget.see("end")
+            self.log_widget.configure(state="disabled")
+            
+        # File Log
+        try:
+            with open(os.path.join(PROJECT_ROOT, "admin_log.txt"), "a") as f:
+                f.write(f"{full_msg}\n")
+        except:
+            pass
+        
         print(message)
 
     def update_status(self):
@@ -136,7 +150,14 @@ class InkAdminApp(ctk.CTk):
                 print(f"Error loading thumbnail: {e}")
 
             ctk.CTkLabel(row, text=f"{item['title']} (ID: {item['id']})").pack(side="left", padx=10)
-            ctk.CTkButton(row, text="Delete", width=60, fg_color="red", command=lambda i=item['id']: self.delete_photo(i)).pack(side="right", padx=5)
+            # Controls
+            controls = ctk.CTkFrame(row, fg_color="transparent")
+            controls.pack(side="right", padx=5)
+            
+            ctk.CTkButton(controls, text="↑", width=30, command=lambda i=item['id']: self.move_photo(i, -1, 'gallery')).pack(side="left", padx=2)
+            ctk.CTkButton(controls, text="↓", width=30, command=lambda i=item['id']: self.move_photo(i, 1, 'gallery')).pack(side="left", padx=2)
+            ctk.CTkButton(controls, text="Edit", width=50, fg_color="#3498DB", command=lambda i=item['id']: self.edit_photo_title(i, 'gallery')).pack(side="left", padx=5)
+            ctk.CTkButton(controls, text="Delete", width=60, fg_color="red", command=lambda i=item['id']: self.delete_photo(i)).pack(side="left", padx=5)
 
     def add_photo(self):
         # macOS Tkinter fix: separate extensions explicitly, plus all files
@@ -250,7 +271,14 @@ class InkAdminApp(ctk.CTk):
             ctk.CTkLabel(row, text=f"ID: {item['id']}").pack(side="left", padx=10)
             ctk.CTkLabel(row, text=item.get('title', 'Untitled')).pack(side="left", padx=10)
             
-            ctk.CTkButton(row, text="Delete", width=60, fg_color="red", command=lambda i=item['id']: self.delete_studio_photo(i)).pack(side="right", padx=5)
+            # Controls
+            controls = ctk.CTkFrame(row, fg_color="transparent")
+            controls.pack(side="right", padx=5)
+            
+            ctk.CTkButton(controls, text="↑", width=30, command=lambda i=item['id']: self.move_photo(i, -1, 'studio')).pack(side="left", padx=2)
+            ctk.CTkButton(controls, text="↓", width=30, command=lambda i=item['id']: self.move_photo(i, 1, 'studio')).pack(side="left", padx=2)
+            ctk.CTkButton(controls, text="Edit", width=50, fg_color="#3498DB", command=lambda i=item['id']: self.edit_photo_title(i, 'studio')).pack(side="left", padx=5)
+            ctk.CTkButton(controls, text="Delete", width=60, fg_color="red", command=lambda i=item['id']: self.delete_studio_photo(i)).pack(side="left", padx=5)
 
     def add_studio_photo(self):
         file_path = filedialog.askopenfilename(filetypes=[("All Files", "*.*")])
@@ -294,6 +322,46 @@ class InkAdminApp(ctk.CTk):
             except Exception as e:
                 self.log(f"Error adding studio photo: {e}")
                 
+    def move_photo(self, photo_id, direction, section):
+        data_list = self.gallery_data if section == 'gallery' else self.studio_data
+        idx = next((i for i, item in enumerate(data_list) if item['id'] == photo_id), -1)
+        
+        if idx == -1: return
+        
+        new_idx = idx + direction
+        if 0 <= new_idx < len(data_list):
+            data_list[idx], data_list[new_idx] = data_list[new_idx], data_list[idx]
+            
+            if section == 'gallery':
+                self.save_data()
+                self.refresh_photo_list()
+            else:
+                with open(os.path.join(SRC_DATA_DIR, 'studio.json'), 'w') as f:
+                    json.dump(self.studio_data, f, indent=2)
+                self.refresh_studio_list()
+            
+            self.log(f"Moved photo {photo_id} {'up' if direction < 0 else 'down'} in {section}")
+
+    def edit_photo_title(self, photo_id, section):
+        data_list = self.gallery_data if section == 'gallery' else self.studio_data
+        item = next((i for i in data_list if i['id'] == photo_id), None)
+        
+        if not item: return
+        
+        new_title = ctk.CTkInputDialog(text="Edit Title:", title="Edit Photo").get_input()
+        if new_title:
+            item['title'] = new_title
+            
+            if section == 'gallery':
+                self.save_data()
+                self.refresh_photo_list()
+            else:
+                with open(os.path.join(SRC_DATA_DIR, 'studio.json'), 'w') as f:
+                    json.dump(self.studio_data, f, indent=2)
+                self.refresh_studio_list()
+                
+            self.log(f"Renamed photo {photo_id} to: {new_title}")
+
     def delete_studio_photo(self, photo_id):
         item = next((i for i in self.studio_data if i['id'] == photo_id), None)
         if item:
