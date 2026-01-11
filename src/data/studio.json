@@ -1,8 +1,8 @@
 [
   {
-    "id": 1,
-    "src": "/images/studio/studio-1.png",
-    "title": "Cozy Atmosphere"
+    "id": 3,
+    "src": "/images/studio/studio-3.jpg",
+    "title": "Details"
   },
   {
     "id": 2,
@@ -10,8 +10,8 @@
     "title": "Workplace"
   },
   {
-    "id": 3,
-    "src": "/images/studio/studio-3.jpg",
-    "title": "Details"
+    "id": 1,
+    "src": "/images/studio/studio-1.png",
+    "title": "Cozy Atmosphere"
   }
 ]
