@@ -1,37 +1,42 @@
 [
   {
     "id": 1,
-    "src": "/images/tattoo-1.png",
-    "title": "Gothic Raven"
+    "src": "/images/tattoo-100.jpg",
+    "title": "Delicate Minimalism"
   },
   {
     "id": 2,
-    "src": "/images/tattoo-1.png",
-    "title": "Skull Study"
+    "src": "/images/tattoo-101.jpg",
+    "title": "Spiritual Calligraphy"
   },
   {
     "id": 3,
-    "src": "/images/tattoo-1.png",
-    "title": "Raven"
+    "src": "/images/tattoo-102.jpg",
+    "title": "Broken Geometry"
   },
   {
     "id": 4,
-    "src": "/images/tattoo-1.png",
-    "title": "Abstract Lines"
+    "src": "/images/tattoo-103.jpg",
+    "title": "Surreal Nature"
   },
   {
     "id": 5,
-    "src": "/images/tattoo-1.png",
-    "title": "Dark Sleeve"
+    "src": "/images/tattoo-104.jpg",
+    "title": "Dark Abstract"
   },
   {
     "id": 6,
     "src": "/images/tattoo-105.jpg",
-    "title": "man pidor"
+    "title": "Conceptual Realism"
   },
   {
     "id": 7,
     "src": "/images/tattoo-106.jpg",
-    "title": "GY"
+    "title": "Emotional Portraiture"
+  },
+  {
+    "id": 8,
+    "src": "/images/tattoo-107.jpg",
+    "title": "Scripted Devotion"
   }
 ]
